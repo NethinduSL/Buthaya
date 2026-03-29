@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Buthaya – The Mind Reader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="badu.css">
+</head>
+<body>
+
+<!-- ═══ LOADING SCREEN ═══ -->
+<div id="loader">
+  <div class="loader-bg"></div>
+  <div class="loader-particles" id="loaderParticles"></div>
+  <div class="loader-content">
+    <div class="loader-orb-wrap">
+      <div class="loader-ring loader-ring-1"></div>
+      <div class="loader-ring loader-ring-2"></div>
+      <div class="loader-ring loader-ring-3"></div>
+      <div class="loader-orb">
+        <div class="loader-orb-inner">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="34" rx="14" ry="9" fill="rgba(200,160,255,.18)"/>
+            <path d="M18 34c0-7.73 6.27-14 14-14s14 6.27 14 14" stroke="rgba(200,160,255,.6)" stroke-width="1.5" fill="none"/>
+            <circle cx="32" cy="34" r="6" fill="rgba(210,170,255,.4)"/>
+            <circle cx="34" cy="31.5" r="2.2" fill="rgba(255,255,255,.8)"/>
+            <path d="M24 28c2-3 4-5 8-5" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="loader-title">BUTHAYA</div>
+    <div class="loader-sub">Awakening the Cosmic Mind</div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loaderBar"></div>
+    </div>
+    <div class="loader-pct" id="loaderPct">0%</div>
+  </div>
+</div>
+
+<!-- ═══ BACKGROUND LAYERS ═══ -->
+<div id="bg"></div>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<canvas id="stars"></canvas>
+
+<!-- ═══ NOISE OVERLAY ═══ -->
+<div class="grain"></div>
+
+<!-- ═══ CONFETTI ═══ -->
+<canvas class="confetti-burst" id="confetti"></canvas>
+
+<!-- ═══ NAV ═══ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-orb-dot"></div>
+      <span class="nav-brand">BUTHAYA</span>
+    </div>
+    <div class="nav-center">
+      <span class="nav-tagline">The Cosmic Mind Reader</span>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="showIntro()" title="Restart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+
+  <!-- ORB SECTION -->
+  <div class="orb-section">
+    <div class="orb-scene" id="orbScene">
+      <div class="orb-aura"></div>
+      <div class="orb-aura2"></div>
+      <div class="orb-ring-deco ring-deco-1"></div>
+      <div class="orb-ring-deco ring-deco-2"></div>
+      <div class="orb" id="orbBall">
+        <div class="orb-shimmer"></div>
+        <div class="orb-glare"></div>
+        <div class="orb-inner">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="34" rx="14" ry="9" fill="rgba(200,160,255,.12)"/>
+            <path d="M18 34c0-7.73 6.27-14 14-14s14 6.27 14 14"
+                  stroke="rgba(200,160,255,.4)" stroke-width="1.5" fill="none"/>
+            <circle cx="32" cy="34" r="6" fill="rgba(210,170,255,.28)"/>
+            <circle cx="34" cy="31.5" r="2.2" fill="rgba(255,255,255,.6)"/>
+            <path d="M24 28c2-3 4-5 8-5"
+                  stroke="rgba(255,255,255,.25)" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="think-label" id="thinkLabel"></div>
+  </div>
+
+  <!-- GAME AREA -->
+  <div id="game"></div>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <span>Powered by <span class="footer-accent">BIT ✗ Team</span> · Cosmic Intelligence v2</span>
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+/* ── LOADING SCREEN ── */
+(function() {
+  const bar = document.getElementById('loaderBar');
+  const pct = document.getElementById('loaderPct');
+  const loader = document.getElementById('loader');
+
+  // Spawn floating particles
+  const container = document.getElementById('loaderParticles');
+  for (let i = 0; i < 24; i++) {
+    const p = document.createElement('div');
+    p.className = 'lp';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${Math.random()*3+1}px;
+      height:${Math.random()*3+1}px;
+      animation-delay:${Math.random()*3}s;
+      animation-duration:${Math.random()*4+3}s;
+      opacity:${Math.random()*.7+.2};
+    `;
+    container.appendChild(p);
+  }
+
+  let progress = 0;
+  const steps = [
+    { target: 20, delay: 100 },
+    { target: 45, delay: 300 },
+    { target: 70, delay: 250 },
+    { target: 90, delay: 400 },
+    { target: 100, delay: 300 }
+  ];
+
+  function runStep(idx) {
+    if (idx >= steps.length) {
+      setTimeout(() => {
+        loader.classList.add('loader-out');
+        setTimeout(() => { loader.style.display = 'none'; }, 800);
+      }, 300);
+      return;
+    }
+    const step = steps[idx];
+    setTimeout(() => {
+      progress = step.target;
+      bar.style.width = progress + '%';
+      pct.textContent = progress + '%';
+      runStep(idx + 1);
+    }, step.delay);
+  }
+  runStep(0);
+})();
+</script>
+</body>
+</html>
